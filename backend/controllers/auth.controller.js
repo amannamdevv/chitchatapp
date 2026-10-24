@@ -4,7 +4,7 @@ import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
     try{
-        const { fullName, username, password, confirmPassword, gender } = req.body;
+        const { fullName, username, password, confirmPassword, gender, about } = req.body;
 
         if(password !== confirmPassword){
             return res.status(400).json({error: "Invalid password"})
@@ -19,15 +19,16 @@ export const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
-        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
+        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
         const newUser = new User({
             fullName,
             username,
             password : hashedPassword,
             gender,
-            profilePic: gender === "male"? boyProfilePic : girlProfilePic
+            profilePic: gender === "male"? boyProfilePic : girlProfilePic,
+            about: about || 'Hey there! I am using ChitChat'
         })
 
         if( newUser ){
@@ -39,7 +40,8 @@ export const signup = async (req, res) => {
                 _id : newUser._id,
                 fullName : newUser.fullName,
                 username : newUser.username,
-                profilePic : newUser.profilePic
+                profilePic : newUser.profilePic,
+                about: newUser.about
             })
         }
         else{
@@ -69,7 +71,8 @@ export const login = async (req, res) => {
             _id: user._id,
             fullName: user.fullName,
             username: user.username,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            about: user.about
         });
 
 

@@ -6,7 +6,7 @@ const useSignup = () => {
   const [loading, setLoading ] = useState(false);
   const {authUser, setAuthUser} = useAuthContext();
 
-  const signup = async ({fullName, username, password, confirmPassword, gender}) => {
+  const signup = async ({fullName, username, password, confirmPassword, gender, about}) => {
     const success = handleInputError({fullName, username, password, confirmPassword, gender});
     if(!success) return;
 
@@ -18,7 +18,7 @@ const useSignup = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({fullName, username, password, confirmPassword ,gender})
+            body: JSON.stringify({fullName, username, password, confirmPassword, gender, about})
         })
 
         const data = await res.json();
@@ -28,9 +28,10 @@ const useSignup = () => {
         
         localStorage.setItem("chat-user", JSON.stringify(data))
         setAuthUser(data);
+        toast.success("Account created successfully!");
 
     } catch(error) {
-        toast.error("An error occurred while signing up.", error.message)
+        toast.error(error.message || "An error occurred while signing up.")
     } finally {
         setLoading(false);
     }

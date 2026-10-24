@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
-		origin: ["http://localhost:3000"],
+		origin: ["http://localhost:3000", "http://localhost:5173", "https://reactproject-chitchat.onrender.com"],
 		methods: ["GET", "POST"],
 	},
 });
@@ -22,7 +22,12 @@ io.on("connection", (socket) => {
 	console.log("a user connected", socket.id);
 
     const userId = socket.handshake.query.userId;
-    if(userId != "undefined") userSocketMap[userId] = socket.id;
+    console.log('User ID from query:', userId);
+    
+    if(userId != "undefined") {
+        userSocketMap[userId] = socket.id;
+        console.log('Updated userSocketMap:', userSocketMap);
+    }
 
     // io.emit() is used to send events to all the connected clients
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
@@ -31,6 +36,7 @@ io.on("connection", (socket) => {
 	socket.on("disconnect", () => {
 		console.log("user disconnected", socket.id);
         delete userSocketMap[userId];
+        console.log('Updated userSocketMap after disconnect:', userSocketMap);
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
 	});
 });

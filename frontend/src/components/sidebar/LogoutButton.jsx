@@ -2,36 +2,27 @@ import React from 'react'
 import { BiLogOut } from 'react-icons/bi'
 import useLogout from '../../hooks/useLogout'
 
-const LogoutButton = () => {
+const LogoutButton = ({ isMobile }) => {
 
   const {loading, logout} = useLogout();
 
   return (
-    <div className='mt-auto '>
+    <div className='mt-auto pt-4 border-t border-white/10'>
         {!loading ? (
-          <BiLogOut className='w-6 h-6 text-white cursor-pointer'
-          onClick={logout}
-        />
+          <button 
+            className={`flex items-center gap-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-white transition-all w-full touch-manipulation ${isMobile ? 'px-4 py-3' : 'px-4 py-2'}`}
+            onClick={logout}
+          >
+            <BiLogOut className={`${isMobile ? 'w-5 h-5' : 'w-5 h-5'}`}/>
+            <span className={`font-medium ${isMobile ? 'text-base' : 'text-base'}`}>Logout</span>
+          </button>
         ) : (
-          <span className='loading loading-spinner'></span>
+          <div className='flex justify-center'>
+            <span className='loading loading-spinner'></span>
+          </div>
         )}
     </div>
   )
 }
 
 export default LogoutButton;
-
-
-
-// import React from 'react'
-// import { BiLogOut } from 'react-icons/bi'
-
-// const LogoutButton = () => {
-//   return (
-//     <div className='mt-auto '>
-//         <BiLogOut className='w-6 h-6 text-white cursor-pointer' />
-//     </div>
-//   )
-// }
-
-// export default LogoutButton

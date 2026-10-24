@@ -4,11 +4,20 @@ import useConversation from '../../zustand/useConversation';
 import useGetConversations from '../../hooks/useGetConversations'
 import toast from 'react-hot-toast';
 
-const SearchInput = () => {
+const SearchInput = ({ onSearchChange, isMobile }) => {
 
   const [search, setSearch] = useState("");
   const {setSelectedConversation} = useConversation()
   const {conversations} = useGetConversations();
+
+  const handleSearch = (searchTerm) => {
+    setSearch(searchTerm);
+    onSearchChange(searchTerm);
+    
+    if(!searchTerm) {
+      return;
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,43 +30,26 @@ const SearchInput = () => {
 
     if(conversation){
       setSelectedConversation(conversation)
-      setSearch("");
     } else {
       toast.error("No User found with that name")
     }
-    
   } 
+  
   return (
     <form onSubmit={handleSubmit} className='flex items-center gap-2'>
-        <input type="text" placeholder='Search...' className='input input-bordered rounded-full'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+        <input 
+            type="text" 
+            placeholder='Search users...' 
+            className={`input input-bordered rounded-full flex-1 glass-dark text-white placeholder-gray-400 focus:border-cyan-400 focus:outline-none touch-manipulation ${isMobile ? 'h-11 text-base' : 'h-10 text-base'}`}
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            autoComplete='off'
         />
-        <button type='submit' className='btn btn-circle bg-sky-500 text-white'>
-            <IoSearchSharp className='w-6 h-6 outline-none'/>
+        <button type='submit' className={`btn btn-circle bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white border-none shadow-lg min-h-0 touch-manipulation ${isMobile ? 'h-11 w-11' : 'h-10 w-10'}`}>
+            <IoSearchSharp className={`${isMobile ? 'w-5 h-5' : 'w-5 h-5'}`}/>
         </button>
     </form>
   )
 }
 
 export default SearchInput
-
-
-
-
-
-// import React from 'react'
-// import { IoSearchSharp } from "react-icons/io5";
-
-// const SearchInput = () => {
-//   return (
-//     <form className='flex items-center gap-2'>
-//         <input type="text" placeholder='Search...' className='input input-bordered rounded-full'/>
-//         <button type='submit' className='btn btn-circle bg-sky-500 text-white'>
-//             <IoSearchSharp className='w-6 h-6 outline-none'/>
-//         </button>
-//     </form>
-//   )
-// }
-
-// export default SearchInput

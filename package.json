@@ -6,11 +6,12 @@
   "scripts": {
     "server": "nodemon backend/server.js",
     "start": "node backend/server.js",
-    "build" : "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build" : "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "db": "node view-db.js"
   },
   "type":"module",
   "keywords": [],
-  "author": "",
+  "author": "Aman Namdev",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

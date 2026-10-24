@@ -1,24 +1,32 @@
 import React from 'react'
 import Conversation from './Conversation'
 import useGetConversations from '../../hooks/useGetConversations';
-import { getRandomEmoji } from '../../utils/emojis';
 
-const Conversations = () => {
+const Conversations = ({ searchTerm = "", onSelectConversation, isMobile }) => {
 
   const {loading, conversations} = useGetConversations();
-  return (
-    <div className='py-2 flex flex-col overflow-auto'>
+  
+  const filteredConversations = searchTerm 
+    ? conversations.filter(c => c.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
+    : conversations;
 
-    {conversations.map((conversation, idx) => (
+  return (
+    <div className='flex flex-col overflow-auto flex-1'>
+
+    {filteredConversations.map((conversation, idx) => (
       <Conversation 
         key={conversation._id}
-        conversation={conversation}  // pass conversation object to Conversation component
-        emoji={getRandomEmoji()}
-        lastIdx ={idx === conversations.length - 1}
+        conversation={conversation}
+        lastIdx ={idx === filteredConversations.length - 1}
+        onSelect={onSelectConversation}
+        isMobile={isMobile}
       />
     ))}
 
-        {loading ? <span className='loading loading-spinner'></span> : null}
+        {loading ? <span className='loading loading-spinner mx-auto mt-4'></span> : null}
+        {!loading && filteredConversations.length === 0 && searchTerm && (
+          <p className='text-center text-gray-400 text-sm mt-4'>No users found</p>
+        )}
     </div>
   )
 }

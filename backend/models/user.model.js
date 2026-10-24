@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     profilePic : {
         type: String,
         default: ''
+    },
+    about: {
+        type: String,
+        default: 'Hey there! I am using ChitChat',
+        maxlength: 150
     }
 }, { timestamps: true });
 
